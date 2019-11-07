@@ -11,6 +11,7 @@
     <Compile Include="src\Util\StringLiteralsUtil.fs" />
     <Compile Include="src\Util\PsiUtil.fs" />
     <Compile Include="src\Util\OpensUtil.fs" />
+    <Compile Include="src\Util\FSharpParensUtil.fs" />
     <Compile Include="src\Intentions\DataProviders.fs" />
     <Compile Include="src\Intentions\ToRecursiveLetBindingsAction.fs" />
     <Compile Include="src\Intentions\ToMultilineRecord.fs" />
@@ -95,7 +96,7 @@
     <Compile Include="src\Search\FSharpSearchGuru.fs" />
     <Compile Include="src\Search\FSharpGeneratedElementsSearch.fs" />
     <Compile Include="src\Search\RecordCtorSearch.fs" />
-    <Compile Include="src\SelectEmbracingConsruct\FSharpSelectEmbracingConstructProvider.fs" />
+    <Compile Include="src\ExtendSelection\FSharpExtendSelectionProvider.fs" />
     <Compile Include="src\Formatter\FSharpReformatCode.fs" />
     <Compile Include="src\Fsi\FsiOptions.fs" />
     <Compile Include="src\Fsi\FsiDetector.fs" />
@@ -113,8 +114,8 @@
     <Compile Include="src\Refactorings\FSharpRefactoringLanguageService.fs" />
     <Compile Include="src\PostfixTemplates\PostfixTemplates.fs" />
     <Compile Include="src\PostfixTemplates\NotTemplate.fs" />
-    <Compile Include="src\PostfixTemplates\IntroduceBindingTemplate.fs" />
-    <Compile Include="src\PostfixTemplates\MatchTemplate.fs" />
+    <Compile Include="src\PostfixTemplates\LetPostfixTemplate.fs" />
+    <Compile Include="src\PostfixTemplates\MatchPostfixTemplate.fs" />
     <Compile Include="src\PostfixTemplates\ForPostfixTemplate.fs" />
     <Compile Include="src\LanguageService\FSharpDeclaredElementIconProvider.fs" />
     <Compile Include="src\LanguageService\FSharpPsiProperties.fs" />

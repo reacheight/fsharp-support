@@ -667,6 +667,10 @@ referenceExpr options { stubBase="FSharpExpressionBase"; } extras {
 matchClause:
   BAR<BAR, Bar>?
   synPat<PAT, Pattern>
+  (
+    WHEN<WHEN, WhenKeyword>
+    synExpr<WHEN_EXPR, WhenExpression>
+  )?
   RARROW<RARROW, RArrow>
   synExpr<EXPR, Expression>;
 
@@ -1202,8 +1206,10 @@ openStatement:
   typeReferenceName<TYPE_REFERENCE, ReferenceName>;
 
 do options { stubBase="DummyDeclaration"; } extras {
+    get { methodName="Attributes" path=<do:ATTRIBUTE_LIST/attributeList:ATTRIBUTE> };
     get { methodName="Expression" path=<do:CHAMELEON_EXPR/chameleonExpression:EXPR> };
 }:
+  attributeList<ATTRIBUTE_LIST, AttributeLists>*
   DO<DO, DoKeyword>?
   chameleonExpression<CHAMELEON_EXPR, DoExpression>;
 

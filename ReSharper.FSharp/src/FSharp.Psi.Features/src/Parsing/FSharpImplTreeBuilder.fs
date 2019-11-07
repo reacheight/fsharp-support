@@ -26,8 +26,10 @@ type FSharpImplTreeBuilder(lexer, document, decls, lifetime, projectedOffset) =
 
     let nextSteps = Stack<BuilderStep>()
 
-    /// FCS splits property declaration into separate fake members when both getter and setter bodies are present.
-    let mutable unfinishedProperty: (int * range) option = None
+    /// FCS splits some declarations into separate fake ones:
+    ///   * property declaration when both getter and setter bodies are present
+    ///   * attributes for module-level do
+    let mutable unfinishedDeclaration: (int * range * CompositeNodeType) option = None
 
     new (lexer, document, decls, lifetime) =
         FSharpImplTreeBuilder(lexer, document, decls, lifetime, 0) 
@@ -42,9 +44,19 @@ type FSharpImplTreeBuilder(lexer, document, decls, lifetime, projectedOffset) =
         let mark, elementType = x.StartTopLevelDeclaration(lid, attrs, moduleKind, range)
         for decl in decls do
             x.ProcessModuleMemberDeclaration(decl)
+        x.EnsureMembersAreFinished()
         x.FinishTopLevelDeclaration(mark, range, elementType)
 
     member x.ProcessModuleMemberDeclaration(moduleMember) =
+        match unfinishedDeclaration with
+        | None -> ()
+        | Some(mark, range, elementType) ->
+            match moduleMember with
+            | SynModuleDecl.DoExpr _ -> ()
+            | _ ->
+                unfinishedDeclaration <- None
+                x.Done(range, mark, elementType)
+
         match moduleMember with
         | SynModuleDecl.NestedModule(ComponentInfo(attrs, _, _, lid, _, _, _, _), _ ,decls, _, range) ->
             let mark = x.MarkAttributesOrIdOrRange(attrs, List.tryHead lid, range)
@@ -85,12 +97,20 @@ type FSharpImplTreeBuilder(lexer, document, decls, lifetime, projectedOffset) =
             x.ProcessHashDirective(hashDirective)
 
         | SynModuleDecl.DoExpr(_, expr, range) ->
-            let mark = x.Mark(range)
+            let mark =
+                match unfinishedDeclaration with
+                | Some(mark, _, _) ->
+                    unfinishedDeclaration <- None
+                    mark
+                | _ -> x.Mark(range)
+
             x.MarkChameleonExpression(expr)
             x.Done(range, mark, ElementType.DO)
 
-        | SynModuleDecl.Attributes(attributeLists, _) ->
+        | SynModuleDecl.Attributes(attributeLists, range) ->
+            let mark = x.Mark(range)
             x.ProcessAttributeLists(attributeLists)
+            unfinishedDeclaration <- Some(mark, range, ElementType.DO)
 
         | SynModuleDecl.ModuleAbbrev(_, lid, range) ->
             let mark = x.Mark(range)
@@ -169,9 +189,9 @@ type FSharpImplTreeBuilder(lexer, document, decls, lifetime, projectedOffset) =
 
     member x.ProcessTypeMember(typeMember: SynMemberDefn) =
         let mark =
-            match unfinishedProperty with
-            | Some(mark, unfinishedRange) when unfinishedRange = typeMember.Range ->
-                unfinishedProperty <- None
+            match unfinishedDeclaration with
+            | Some(mark, unfinishedRange, _) when unfinishedRange = typeMember.Range ->
+                unfinishedDeclaration <- None
                 mark
 
             | _ ->
@@ -235,7 +255,7 @@ type FSharpImplTreeBuilder(lexer, document, decls, lifetime, projectedOffset) =
 
             | _ -> ElementType.OTHER_TYPE_MEMBER
 
-        if unfinishedProperty.IsNone then
+        if unfinishedDeclaration.IsNone then
             x.Done(typeMember.Range, mark, memberType)
 
     member x.ProcessMemberBinding(mark, Binding(_, _, _, _, _, _, valData, headPat, returnInfo, expr, _, _), range) =
@@ -287,7 +307,7 @@ type FSharpImplTreeBuilder(lexer, document, decls, lifetime, projectedOffset) =
         | SynValData(Some(flags), _, _) when
                 flags.MemberKind = MemberKind.PropertyGet || flags.MemberKind = MemberKind.PropertySet ->
             if expr.Range.End <> range.End then
-                unfinishedProperty <- Some(mark, range)
+                unfinishedDeclaration <- Some(mark, range, ElementType.MEMBER_DECLARATION)
 
         | _ -> ()
 
@@ -300,10 +320,10 @@ type FSharpImplTreeBuilder(lexer, document, decls, lifetime, projectedOffset) =
         x.Done(mark, ElementType.ACCESSOR_DECLARATION)
 
     member x.EnsureMembersAreFinished() =
-        match unfinishedProperty with
-        | Some(mark, unfinishedRange) ->
-            unfinishedProperty <- None
-            x.Done(unfinishedRange, mark, ElementType.MEMBER_DECLARATION)
+        match unfinishedDeclaration with
+        | Some(mark, unfinishedRange, elementType) ->
+            unfinishedDeclaration <- None
+            x.Done(unfinishedRange, mark, elementType)
         | _ -> ()
 
     member x.ProcessCtorSelfId(selfId) =
@@ -779,16 +799,16 @@ type FSharpImplTreeBuilder(lexer, document, decls, lifetime, projectedOffset) =
 
         | SynExpr.NamedIndexedPropertySet(lid, expr1, expr2, _) ->
             x.PushRange(range, ElementType.SET_EXPR)
-            x.PushRange(unionRanges lid.Range expr2.Range, ElementType.NAMED_INDEXER_EXPR)
             x.PushExpression(expr2)
+            x.PushRange(unionRanges lid.Range expr1.Range, ElementType.NAMED_INDEXER_EXPR)
             x.ProcessLongIdentifierExpression(lid.Lid, lid.Range)
             x.PushRange(expr1.Range, ElementType.INDEXER_ARG)
             x.ProcessExpression(expr1)
 
         | SynExpr.DotNamedIndexedPropertySet(expr1, lid, expr2, expr3, _) ->
             x.PushRange(range, ElementType.SET_EXPR)
-            x.PushRange(unionRanges expr1.Range expr2.Range, ElementType.NAMED_INDEXER_EXPR)
             x.PushExpression(expr3)
+            x.PushRange(unionRanges expr1.Range expr2.Range, ElementType.NAMED_INDEXER_EXPR)
             x.PushNamedIndexerArgExpression(expr2)
             x.ProcessLongIdentifierAndQualifierExpression(expr1, lid)
 

@@ -84,12 +84,16 @@ type FSharpParserTest() =
     [<Test>] member x.``Expr - Lambda 23 - Attribute, Typed``() = x.DoNamedTest()
 
     [<Test>] member x.``Expr - Match 01 - Simple``() = x.DoNamedTest()
+    [<Test>] member x.``Expr - Match 02 - Simple pat``() = x.DoNamedTest()
+    [<Test>] member x.``Expr - Match 03 - When Expr``() = x.DoNamedTest()
 
     [<Test>] member x.``Expr - Do 01 - Simple``() = x.DoNamedTest()
     [<Test>] member x.``Expr - Do 02 - Let``() = x.DoNamedTest()
     [<Test>] member x.``Expr - Do 03 - Let in do``() = x.DoNamedTest()
 
     [<Test>] member x.``Expr - Assert 01 - Simple``() = x.DoNamedTest()
+
+    [<Test>] member x.``Expr - LetOrUse 01``() = x.DoNamedTest()
 
     [<Test>] member x.``Expr - TryWith 01 - Simple``() = x.DoNamedTest()
     [<Test>] member x.``Expr - TryWith 02 - Parameters``() = x.DoNamedTest()
@@ -245,3 +249,5 @@ type FSharpErrorsParserTest() =
     [<Test>] member x.``Expr - Unfinished let 02 - In``() = x.DoNamedTest()
     [<Test>] member x.``Expr - Unfinished let 03 - Inline in``() = x.DoNamedTest()
     [<Test>] member x.``Expr - Unfinished let 04 - In, before other``() = x.DoNamedTest()
+
+    [<Test>] member x.``Line separators 01``() = x.DoNamedTest()
