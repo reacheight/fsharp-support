@@ -37,15 +37,16 @@ namespace JetBrains.ReSharper.Plugins.FSharp.Services.Formatter
       var typeDeclarationIndentingRulesParameters = new[]
       {
         ("EnumDeclaration", ElementType.ENUM_DECLARATION, EnumDeclaration.ENUM_MEMBER),
-        ("UnionDeclaration", ElementType.UNION_DECLARATION, UnionDeclaration.UNION_REPR),
-        ("TypeAbbreviationDeclaration", ElementType.TYPE_ABBREVIATION_DECLARATION, TypeAbbreviationDeclaration.TYPE_OR_UNION_CASE),
+        ("UnionDeclarationCases", ElementType.UNION_DECLARATION, UnionDeclaration.UNION_REPR),
+        ("UnionDeclarationMembers", ElementType.UNION_DECLARATION, UnionDeclaration.TYPE_MEMBER),
+        ("TypeAbbreviation", ElementType.TYPE_ABBREVIATION_DECLARATION, TypeAbbreviationDeclaration.TYPE_OR_UNION_CASE),
         ("ModuleAbbreviation", ElementType.MODULE_ABBREVIATION, ModuleAbbreviation.TYPE_REFERENCE),
         ("TypeExtenstionDeclaration", ElementType.TYPE_EXTENSION_DECLARATION, TypeExtensionDeclaration.TYPE_MEMBER),
         ("DelegateDeclaration", ElementType.DELEGATE_DECLARATION, DelegateDeclaration.DELEGATE_REPR),
         ("ClassDeclaration", ElementType.CLASS_DECLARATION, ClassDeclaration.TYPE_MEMBER),
         ("InterfaceDeclaration", ElementType.INTERFACE_DECLARATION, InterfaceDeclaration.TYPE_MEMBER),
         ("ObjectTypeDeclaration", ElementType.OBJECT_TYPE_DECLARATION, ObjectTypeDeclaration.TYPE_MEMBER),
-        ("NestedTypeUnionCaseDeclaration", ElementType.NESTED_TYPE_UNION_CASE_DECLARATION, NestedTypeUnionCaseDeclaration.UNION_FIELD),
+        ("NestedUnionCase", ElementType.NESTED_TYPE_UNION_CASE_DECLARATION, NestedTypeUnionCaseDeclaration.UNION_FIELD),
       };
 
       var typeMemberDeclarationIndentingRulesParameters = new[]

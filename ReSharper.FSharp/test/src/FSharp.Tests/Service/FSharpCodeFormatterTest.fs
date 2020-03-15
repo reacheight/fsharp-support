@@ -61,6 +61,8 @@ type FSharpCodeFormatterTest() =
 
     [<Test>] member x.``Enum declaration indent 01 - Correct indent``() = x.DoNamedTest()
     [<Test>] member x.``Union declaration indent 01 - Correct indent``() = x.DoNamedTest()
+    [<Test>] member x.``Union declaration indent 02 - Type member - Correct indent``() = x.DoNamedTest()
+    [<Test>] member x.``Union declaration indent 03 - Nested - Correct indent``() = x.DoNamedTest()
     [<Test>] member x.``Type abbreviation declaration indent 01 - Correct indent``() = x.DoNamedTest()
     [<Test>] member x.``Module abbreviation declaration indent 01 - Correct indent``() = x.DoNamedTest()
     [<Test>] member x.``Type extension declaration indent 01 - Correct indent``() = x.DoNamedTest()
