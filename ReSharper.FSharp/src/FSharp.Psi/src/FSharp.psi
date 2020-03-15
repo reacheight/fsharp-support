@@ -1196,14 +1196,10 @@ memberDeclaration options { stubBase="FSharpProperTypeMemberDeclarationBase"; } 
   (
     memberParamDeclarationGroup<PARAM_GROUP, ParameterGroups>*
     EQUALS
-    chameleonExpression
+    chameleonExpression<MEMBER_BODY, MemberBody>
   |
-    WITH
     accessorDeclaration
-    (
-      AND
-      accessorDeclaration
-    )?
+    accessorDeclaration?
   );
 
 abstractSlot options { stubBase="FSharpProperTypeMemberDeclarationBase"; } extras {
@@ -1242,6 +1238,7 @@ accessorsNamesClause:
   );
 
 accessorDeclaration:
+  (WITH | AND)
   IDENTIFIER<IDENTIFIER, Identifier>
   memberParamDeclaration<PARAMETER, Parameters>*
   EQUALS

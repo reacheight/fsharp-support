@@ -88,6 +88,14 @@ type FSharpTreeBuilderBase(lexer: ILexer, document: IDocument, lifetime: Lifetim
         x.AdvanceToTokenOrOffset(tokenType, rangeStart, range)
         x.Mark()
 
+    member x.MarkTokenOrRange(firstTokenType, secondTokenType, range: range) =
+        let rangeStart = x.GetStartOffset(range)
+        while x.CurrentOffset < rangeStart &&
+              x.TokenType != firstTokenType &&
+              x.TokenType != secondTokenType do
+            x.AdvanceLexer()
+        x.Mark()
+
     member x.AdvanceToOffset(offset) =
 //        Assertion.Assert(x.CurrentOffset <= offset, "currentOffset: {0}, maxOffset: {1}", x.CurrentOffset, offset)
 

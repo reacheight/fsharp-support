@@ -267,6 +267,8 @@ type FSharpParserTest() =
     [<Test>] member x.``Type member - Let bindings 01``() = x.DoNamedTest()
 
     [<Test>] member x.``Type member - Member 01 - Wild self id``() = x.DoNamedTest()
+    [<Test>] member x.``Type member - Member 02 - With accessor``() = x.DoNamedTest()
+    [<Test>] member x.``Type member - Member 03 - With get and set``() = x.DoNamedTest()
 
     [<Test>] member x.``Module member - Open 01``() = x.DoNamedTest()
     [<Test>] member x.``Module member - Open 02 - Qualifier``() = x.DoNamedTest()

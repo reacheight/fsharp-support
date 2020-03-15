@@ -314,7 +314,7 @@ type FSharpImplTreeBuilder(lexer, document, decls, lifetime, projectedOffset) =
         elType
     
     member x.ProcessAccessor(IdentRange range, memberParams, expr) =
-        let mark = x.Mark(range)
+        let mark = x.MarkTokenOrRange(FSharpTokenType.WITH, FSharpTokenType.AND, range)
         x.ProcessPatternParams(memberParams, true, true)
         x.MarkChameleonExpression(expr)
         x.Done(mark, ElementType.ACCESSOR_DECLARATION)
