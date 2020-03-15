@@ -1175,7 +1175,9 @@ memberSelfId options { stubBase="LocalDeclarationBase"; }:
 memberConstructorDeclaration options { stubBase="FSharpProperTypeMemberDeclarationBase"; }:
   NEW<NEW, NewKeyword>
   localDeclaration<PARAMETER, Parameters>* fakeSeparator
-  ctorSelfId<SELF_ID, SelfIdentifier>?;
+  ctorSelfId<SELF_ID, SelfIdentifier>?
+  EQUALS
+  chameleonExpression<CTOR_BODY, ConstructorBody>;
 
 
 
