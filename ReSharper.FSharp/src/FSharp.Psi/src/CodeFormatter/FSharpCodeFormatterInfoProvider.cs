@@ -34,12 +34,45 @@ namespace JetBrains.ReSharper.Plugins.FSharp.Services.Formatter
         ("SetExpr", ElementType.SET_EXPR, SetExpr.RIGHT_EXPR),
       };
 
+      var typeDeclarationIndentingRulesParameters = new[]
+      {
+        ("EnumDeclaration", ElementType.ENUM_DECLARATION, EnumDeclaration.ENUM_MEMBER),
+        ("UnionDeclaration", ElementType.UNION_DECLARATION, UnionDeclaration.UNION_REPR),
+        ("TypeAbbreviationDeclaration", ElementType.TYPE_ABBREVIATION_DECLARATION, TypeAbbreviationDeclaration.TYPE_OR_UNION_CASE),
+        ("ModuleAbbreviation", ElementType.MODULE_ABBREVIATION, ModuleAbbreviation.TYPE_REFERENCE),
+        ("TypeExtenstionDeclaration", ElementType.TYPE_EXTENSION_DECLARATION, TypeExtensionDeclaration.TYPE_MEMBER),
+        ("DelegateDeclaration", ElementType.DELEGATE_DECLARATION, DelegateDeclaration.DELEGATE_REPR),
+        ("ClassDeclaration", ElementType.CLASS_DECLARATION, ClassDeclaration.TYPE_MEMBER),
+        ("InterfaceDeclaration", ElementType.INTERFACE_DECLARATION, InterfaceDeclaration.TYPE_MEMBER),
+        ("ObjectTypeDeclaration", ElementType.OBJECT_TYPE_DECLARATION, ObjectTypeDeclaration.TYPE_MEMBER),
+        ("NestedTypeUnionCaseDeclaration", ElementType.NESTED_TYPE_UNION_CASE_DECLARATION, NestedTypeUnionCaseDeclaration.UNION_FIELD),
+      };
+
+      var typeMemberDeclarationIndentingRulesParameters = new[]
+      {
+        ("InterfaceImplementation", ElementType.INTERFACE_IMPLEMENTATION, InterfaceImplementation.MEMBER_DECL),
+        ("MemberBody", ElementType.MEMBER_DECLARATION, MemberDeclaration.MEMBER_BODY),
+        ("AccessorDeclaration", ElementType.ACCESSOR_DECLARATION, AccessorDeclaration.CHAMELEON_EXPR),
+        ("AutoPropertyDeclaration", ElementType.AUTO_PROPERTY, AutoProperty.CHAMELEON_EXPR),
+        ("ConstructorDeclaration", ElementType.MEMBER_CONSTRUCTOR_DECLARATION, MemberConstructorDeclaration.CTOR_BODY),
+      };
+
       lock (this)
       {
         bindingAndModuleDeclIndentingRulesParameters
           .Union(synExprIndentingRulesParameters)
+          .Union(typeDeclarationIndentingRulesParameters)
+          .Union(typeMemberDeclarationIndentingRulesParameters)
           .ToList()
           .ForEach(DescribeSimpleIndentingRule);
+
+        Describe<IndentingRule>()
+          .Name("MemberWithAccessorsDeclarationIndent")
+          .Where(
+            Parent().HasType(ElementType.MEMBER_DECLARATION),
+            Node().HasType(ElementType.ACCESSOR_DECLARATION))
+          .Return(IndentType.External)
+          .Build();
       }
     }
 
