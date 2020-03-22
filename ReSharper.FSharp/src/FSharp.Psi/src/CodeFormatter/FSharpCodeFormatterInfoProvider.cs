@@ -53,7 +53,9 @@ namespace JetBrains.ReSharper.Plugins.FSharp.Services.Formatter
       {
         ("InterfaceImplementation", ElementType.INTERFACE_IMPLEMENTATION, InterfaceImplementation.MEMBER_DECL),
         ("MemberBody", ElementType.MEMBER_DECLARATION, MemberDeclaration.MEMBER_BODY),
-        ("AccessorDeclaration", ElementType.ACCESSOR_DECLARATION, AccessorDeclaration.CHAMELEON_EXPR),
+        ("WithAccessorDeclaration", ElementType.MEMBER_DECLARATION, MemberDeclaration.WITH_ACCESSOR),
+        ("AndAccessorDeclaration", ElementType.MEMBER_DECLARATION, MemberDeclaration.AND_ACCESSOR),
+        ("AccessorBody", ElementType.ACCESSOR_DECLARATION, AccessorDeclaration.CHAMELEON_EXPR),
         ("AutoPropertyDeclaration", ElementType.AUTO_PROPERTY, AutoProperty.CHAMELEON_EXPR),
         ("ConstructorDeclaration", ElementType.MEMBER_CONSTRUCTOR_DECLARATION, MemberConstructorDeclaration.CTOR_BODY),
       };
@@ -66,14 +68,6 @@ namespace JetBrains.ReSharper.Plugins.FSharp.Services.Formatter
           .Union(typeMemberDeclarationIndentingRulesParameters)
           .ToList()
           .ForEach(DescribeSimpleIndentingRule);
-
-        Describe<IndentingRule>()
-          .Name("MemberWithAccessorsDeclarationIndent")
-          .Where(
-            Parent().HasType(ElementType.MEMBER_DECLARATION),
-            Node().HasType(ElementType.ACCESSOR_DECLARATION))
-          .Return(IndentType.External)
-          .Build();
       }
     }
 

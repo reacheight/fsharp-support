@@ -181,6 +181,7 @@ type FSharpImplTreeBuilder(lexer, document, decls, lifetime, projectedOffset) =
         x.Done(range, mark, elementType)
 
     member x.ProcessTypeMember(typeMember: SynMemberDefn) =
+        let isUnfinished = unfinishedDeclaration.IsSome
         let mark =
             match unfinishedDeclaration with
             | Some(mark, unfinishedRange, _) when unfinishedRange = typeMember.Range ->
@@ -225,7 +226,7 @@ type FSharpImplTreeBuilder(lexer, document, decls, lifetime, projectedOffset) =
                 ElementType.INTERFACE_INHERIT
 
             | SynMemberDefn.Member(binding, range) ->
-                x.ProcessMemberBinding(mark, binding, range)
+                x.ProcessMemberBinding(mark, binding, range, isUnfinished)
 
             | SynMemberDefn.LetBindings(bindings, _, _, range) ->
                 for binding in bindings do
@@ -258,7 +259,7 @@ type FSharpImplTreeBuilder(lexer, document, decls, lifetime, projectedOffset) =
         if unfinishedDeclaration.IsNone then
             x.Done(typeMember.Range, mark, memberType)
 
-    member x.ProcessMemberBinding(mark, Binding(_, _, _, _, _, _, valData, headPat, returnInfo, expr, _, _), range) =
+    member x.ProcessMemberBinding(mark, Binding(_, _, _, _, _, _, valData, headPat, returnInfo, expr, _, _), range: range, isUnfinished) =
         let elType =
             match headPat with
             | SynPat.LongIdent(LongIdentWithDots(lid, _), accessorId, typeParamsOpt, memberParams, _, _) ->
@@ -283,7 +284,8 @@ type FSharpImplTreeBuilder(lexer, document, decls, lifetime, projectedOffset) =
                         ElementType.MEMBER_DECLARATION
 
                 | selfId :: _ :: _ ->
-                    x.MarkAndDone(selfId.idRange, ElementType.MEMBER_SELF_ID)
+                    if not isUnfinished then
+                        x.MarkAndDone(selfId.idRange, ElementType.MEMBER_SELF_ID)
 
                     match accessorId with
                     | Some ident ->
@@ -1326,7 +1328,7 @@ type ObjectExpressionMemberListProcessor() =
     override x.Process(binding, builder) =
         let (Binding(_, _, _, _, _, _, _, _, _, _, range, _)) = binding
         let mark = builder.Mark(range)
-        let elementType = builder.ProcessMemberBinding(mark, binding, range)
+        let elementType = builder.ProcessMemberBinding(mark, binding, range, false)
         builder.Done(range, mark, elementType)
 
 type InterfaceImplementationListProcessor() =

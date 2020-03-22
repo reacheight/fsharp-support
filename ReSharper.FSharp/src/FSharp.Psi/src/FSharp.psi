@@ -1194,14 +1194,15 @@ memberDeclaration options { stubBase="FSharpProperTypeMemberDeclarationBase"; } 
   accessModifier{ACCESS_MODIFIER, AccessModifier}?
   memberSelfId<SELF_ID, SelfId>?
   identOrOpName{IDENTIFIER, Identifier}
-  typeParameterOfMethodList<TYPE_PARAMETERS_LIST, TypeParameterList>?
   (
+    typeParameterOfMethodList<TYPE_PARAMETERS_LIST, TypeParameterList>?
     memberParamDeclarationGroup<PARAM_GROUP, ParameterGroups>*
     EQUALS
     chameleonExpression<MEMBER_BODY, MemberBody>
-  |
-    accessorDeclaration
-    accessorDeclaration?
+  ) |
+  (
+    accessorDeclaration<WITH_ACCESSOR, WithAccessor>
+    accessorDeclaration<AND_ACCESSOR, AndAccessor>?
   );
 
 abstractSlot options { stubBase="FSharpProperTypeMemberDeclarationBase"; } extras {
