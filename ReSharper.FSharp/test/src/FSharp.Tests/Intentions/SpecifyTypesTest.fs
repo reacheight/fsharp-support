@@ -40,6 +40,7 @@ type SpecifyTypesActionTest() =
 
     [<TestSetting(typeof<FSharpFormatSettingsKey>, "SpaceBeforeColon", "true")>]
     [<Test>] member x.``Function - Formatting - Add space``() = x.DoNamedTest()
+    [<Test>] member x.``Function - Formatting - Align``() = x.DoNamedTest()
 
     [<Test>] member x.``Value 01``() = x.DoNamedTest()
     [<Test>] member x.``Value 02 - Function``() = x.DoNamedTest()

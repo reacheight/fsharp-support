@@ -101,7 +101,7 @@ type FunctionAnnotationAction(dataProvider: FSharpContextActionDataProvider) =
         let factory = binding.CreateElementFactory()
 
         use writeCookie = WriteLockCookie.Create(binding.IsPhysical())
-        use disableFormatter = new DisableCodeFormatter()
+        use formatter = FSharpRegistryUtil.AllowFormatterCookie.Create()
 
         let namedPat = binding.HeadPattern.As<INamedPat>()
         if isNull namedPat then () else
