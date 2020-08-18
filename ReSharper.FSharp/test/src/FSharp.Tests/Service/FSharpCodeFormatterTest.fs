@@ -89,6 +89,7 @@ type FSharpCodeFormatterTest() =
 
     [<Test>] member x.``PrefixApp expr indent 01``() = x.DoNamedTest()
     [<Test>] member x.``PrefixApp expr indent 02``() = x.DoNamedTest()
+    [<Test>] member x.``PrefixApp expr indent 03``() = x.DoNamedTest()
     [<Test>] member x.``PrefixApp expr indent - Comp expr 01``() = x.DoNamedTest()
     [<Test>] member x.``PrefixApp expr indent - Comp expr 02``() = x.DoNamedTest()
 

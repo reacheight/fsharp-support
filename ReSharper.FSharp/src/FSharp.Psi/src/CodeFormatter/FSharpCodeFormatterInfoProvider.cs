@@ -184,6 +184,7 @@ namespace JetBrains.ReSharper.Plugins.FSharp.Services.Formatter
         ("BinaryExpr", ElementType.BINARY_APP_EXPR),
         ("RecordDeclaration", ElementType.RECORD_FIELD_DECLARATION_LIST),
         ("RecordExprBindings", ElementType.RECORD_FIELD_BINDING_LIST),
+        ("PrefixAppExpr", ElementType.PREFIX_APP_EXPR),
       };
 
       alignmentRulesParameters
