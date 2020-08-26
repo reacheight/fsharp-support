@@ -22,4 +22,6 @@ jobs:
     - name: Build
       run: dotnet build ./ReSharper.FSharp
     - name: Test
-      run: dotnet test ./ReSharper.FSharp/test/src/FSharp.Tests/
+      run: |
+        cd ./rider-fsharp
+        ./gradlew test
