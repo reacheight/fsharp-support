@@ -24,6 +24,6 @@ jobs:
     - name: Install dependencies
       run: dotnet restore ./ReSharper.FSharp
     - name: Build
-      run: dotnet build ./ReSharper.FSharp --configuration Release --no-restore
+      run: dotnet build ./ReSharper.FSharp/src
     - name: Test
-      run: dotnet test ./ReSharper.FSharp --no-restore --verbosity normal
+      run: dotnet test ./ReSharper.FSharp/test/src
